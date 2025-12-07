@@ -1,7 +1,8 @@
-import eventlet
+import gevent.monkey
+gevent.monkey.patch_all()
+
 import random  # Importa random para sorteio
 import os
-eventlet.monkey_patch()
 
 from flask import Flask, render_template, send_from_directory, request
 from flask_socketio import SocketIO, emit
@@ -9,7 +10,7 @@ import chess
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-xadrez-2024')
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet')
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode='gevent')
 
 # Estado Global do Jogo (Singleton para LAN simples)
 board = chess.Board()
