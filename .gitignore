@@ -17,7 +17,18 @@ ENV/
 # Arquivos de Sistema
 Thumbs.db
 Desktop.ini
+.DS_Store
 
 # Logs e Databases locais
 *.log
 *.sqlite3
+
+# Arquivos temporários
+pecas_temp/
+*.eps
+
+# Render
+.render/
+
+# Scripts temporários
+fix_and_push.ps1

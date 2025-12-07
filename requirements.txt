@@ -3,4 +3,5 @@ flask-socketio==5.3.6
 python-chess==1.999
 eventlet==0.33.3
 gunicorn==21.2.0
-
+gevent==23.9.1
+gevent-websocket==0.10.1

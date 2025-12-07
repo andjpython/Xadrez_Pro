@@ -1,5 +1,6 @@
 import eventlet
 import random  # Importa random para sorteio
+import os
 eventlet.monkey_patch()
 
 from flask import Flask, render_template, send_from_directory, request
@@ -7,8 +8,8 @@ from flask_socketio import SocketIO, emit
 import chess
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'secret!'
-socketio = SocketIO(app, cors_allowed_origins="*")
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-xadrez-2024')
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet')
 
 # Estado Global do Jogo (Singleton para LAN simples)
 board = chess.Board()
@@ -235,4 +236,7 @@ def handle_reset():
 
 if __name__ == '__main__':
     # host='0.0.0.0' permite acesso externo na LAN
-    socketio.run(app, host='0.0.0.0', port=5000, debug=True)
+    # Em produção, debug deve ser False
+    debug_mode = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
+    port = int(os.environ.get('PORT', 5000))
+    socketio.run(app, host='0.0.0.0', port=port, debug=debug_mode)
