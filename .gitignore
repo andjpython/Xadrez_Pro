@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Ambientes Virtuais
+.venv/
+venv/
+env/
+ENV/
+
+# Configurações de IDE
+.vscode/
+.cursor/
+.idea/
+
+# Arquivos de Sistema
+Thumbs.db
+Desktop.ini
+
+# Logs e Databases locais
+*.log
+*.sqlite3

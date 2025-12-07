@@ -1,0 +1,385 @@
+:root {
+    --glass-bg: rgba(0, 0, 0, 0.6);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --text-color: #fff;
+    --primary-color: #d4af37; /* Dourado */
+    --hover-color: #f1c40f;
+    --good-color: #2ecc71;
+    --bad-color: #e74c3c;
+    --highlight-color: rgba(255, 255, 0, 0.5);
+    --valid-move-color: rgba(46, 204, 113, 0.6);
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    background: url('/fundo_site/xadrez-projetado-arte-ouro-prata-na-luz.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: var(--text-color);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+}
+
+/* Glassmorphism Genérico */
+.glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 15px;
+    padding: 1rem;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+/* Tela Inicial */
+#start-screen {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0,0,0,0.8);
+}
+
+.modal-content {
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    border: 2px solid var(--primary-color);
+}
+
+/* Layout do Jogo */
+#game-container {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    width: 100%;
+    max-width: 1400px;
+    height: 95vh;
+    padding: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Coluna Lateral (Infos) */
+.sidebar {
+    flex: 1;
+    max-width: 300px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    justify-content: center;
+}
+
+/* Área do Tabuleiro (Centro) */
+#board-wrapper {
+    flex: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 80vh;
+    aspect-ratio: 1/1;
+    position: relative;
+}
+
+#myBoard {
+    width: 100%;
+    height: 100%;
+    border: 15px solid #3d2b1f;
+    border-radius: 5px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+    background-size: cover;
+}
+
+/* Painéis de Info */
+.player-info {
+    text-align: center;
+    background: rgba(0, 0, 0, 0.75); /* Mais escuro e menos transparente */
+    border: 1px solid rgba(212, 175, 55, 0.3); /* Borda dourada sutil */
+    border-radius: 10px;
+    padding: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+/* Painel de Ajuda Lateral (Dinâmico) */
+.info-panel-active {
+    background: rgba(212, 175, 55, 0.9) !important; /* Quase sólido quando ativo */
+    color: #000; /* Texto preto para contraste no dourado */
+    border: 2px solid #fff;
+}
+
+.piece-help-content {
+    display: none;
+    text-align: left;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.piece-help-content h3 {
+    color: #000; /* Título preto no fundo dourado */
+    margin-top: 0;
+    border-bottom: 1px solid rgba(0,0,0,0.2);
+    padding-bottom: 5px;
+}
+
+.score-badge {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #f1c40f; /* Amarelo mais vivo */
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 5px;
+    font-size: 0.9rem;
+    margin-top: 5px;
+    font-weight: bold;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Botões */
+.btn-primary {
+    background: var(--primary-color);
+    color: #000;
+    border: none;
+    padding: 12px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    width: 100%;
+    transition: transform 0.2s;
+}
+
+.btn-primary:active { transform: scale(0.95); }
+
+.btn-secondary {
+    background: transparent;
+    border: 1px solid #fff;
+    color: #fff;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-secondary:hover { background: rgba(255,255,255,0.1); }
+
+/* Inputs */
+input, select {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 8px;
+    border: none;
+    background: rgba(255,255,255,0.9);
+}
+
+/* Chart */
+.chart-container {
+    height: 180px;
+    background: #111; /* Fundo sólido quase preto */
+    border: 1px solid var(--primary-color);
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.9);
+    position: relative;
+}
+
+/* Status Text Colors */
+.status-good { color: #2ecc71; text-shadow: 0 0 5px rgba(46, 204, 113, 0.4); }
+.status-neutral { color: #3498db; }
+.status-bad { color: #e74c3c; text-shadow: 0 0 5px rgba(231, 76, 60, 0.4); }
+.status-excellent { color: #f1c40f; text-shadow: 0 0 10px rgba(241, 196, 15, 0.6); font-weight: 800; }
+.status-terrible { color: #8e44ad; font-weight: 800; }
+
+/* Modal Genérico */
+.modal {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85);
+    z-index: 3000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hidden { display: none !important; }
+
+.victory-panel {
+    background: linear-gradient(rgba(0,0,0,0.9), rgba(0,0,0,0.9)), url('/fundo_site/pecas-concorrencia-estrategia-de-tabuleiro-de-xadrez-xeque-mate.jpg');
+    background-size: cover;
+    border: 3px solid var(--primary-color);
+}
+
+.trophy-icon { font-size: 4rem; margin-bottom: 10px; animation: bounce 2s infinite; }
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+/* Notificações (Toast) */
+#notification-area {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 5000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 90%;
+    max-width: 400px;
+    pointer-events: none; /* Permite clicar através se não houver toast */
+}
+
+.toast {
+    background: rgba(0, 0, 0, 0.9);
+    color: #fff;
+    border-left: 5px solid var(--primary-color);
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    animation: slideInDown 0.5s forwards, fadeOut 0.5s forwards 4s;
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.toast strong { color: var(--primary-color); }
+
+@keyframes slideInDown {
+    from { transform: translateY(-100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; visibility: hidden; }
+}
+
+/* Indicador Online */
+.online-indicator {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    background-color: #555; /* Cinza (Offline) por padrão */
+    border-radius: 50%;
+    margin-right: 8px;
+    transition: all 0.5s ease;
+    box-shadow: none;
+}
+
+.indicator-active {
+    background-color: #2ecc71; /* Verde (Online) */
+    box-shadow: 0 0 10px #2ecc71;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(46, 204, 113, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
+}
+
+/* --- Highlights de Movimento --- */
+.highlight-move {
+    box-shadow: inset 0 0 3px 3px var(--valid-move-color);
+    position: relative;
+}
+
+.highlight-move::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 25%; height: 25%;
+    background: var(--valid-move-color);
+    border-radius: 50%;
+}
+
+.highlight-capture {
+    box-shadow: inset 0 0 5px 5px var(--bad-color) !important;
+}
+
+/* --- Temas de Tabuleiro --- */
+.theme-madeira .board-b72b1 { border-color: #5c4033; }
+.theme-madeira .white-1e1d7 { background-color: #f0d9b5; color: #b58863; }
+.theme-madeira .black-3c85d { background-color: #b58863; color: #f0d9b5; }
+
+.theme-azul .board-b72b1 { border-color: #34495e; }
+.theme-azul .white-1e1d7 { background-color: #ecf0f1; color: #34495e; }
+.theme-azul .black-3c85d { background-color: #34495e; color: #ecf0f1; }
+
+.theme-verde .board-b72b1 { border-color: #27ae60; }
+.theme-verde .white-1e1d7 { background-color: #e8f5e9; color: #27ae60; }
+.theme-verde .black-3c85d { background-color: #27ae60; color: #e8f5e9; }
+
+/* --- Responsividade Crítica (Correção de Cortes) --- */
+@media (max-width: 1024px) {
+    #game-container {
+        flex-direction: column;
+        justify-content: flex-start; /* Alinha no topo, não no centro */
+        padding-top: 10px; /* Reduz padding superior */
+        height: auto;
+        min-height: 100dvh; /* Altura dinâmica para mobile */
+        gap: 10px;
+    }
+
+    .sidebar {
+        width: 100%;
+        max-width: 500px;
+        height: auto;
+        flex-direction: row;
+        flex-wrap: wrap;
+        order: 2; /* Info abaixo do tabuleiro */
+        padding-bottom: 20px;
+    }
+
+    #board-wrapper {
+        order: 1;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start; /* Evita que o tabuleiro tente centralizar verticalmente e suma */
+        margin-top: 5px;
+    }
+
+    #myBoard {
+        /* Garante que o tabuleiro caiba na tela sem cortar */
+        width: 92vw; /* Um pouco menos que a largura total */
+        height: 92vw; /* Mantém proporção quadrada */
+        max-width: 500px;
+        max-height: 500px;
+        /* Limite de altura para telas muito "baixas" e largas (modo paisagem) */
+        max-height: 60vh; 
+        aspect-ratio: 1/1;
+    }
+
+    .chart-container { display: none; }
+    .player-info { flex: 1; min-width: 140px; padding: 0.5rem; }
+    .status-panel { width: 100%; order: -1; margin-bottom: 5px; }
+    
+    .info-panel-active { width: 100%; order: -2; }
+}
